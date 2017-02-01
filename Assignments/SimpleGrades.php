@@ -7,12 +7,7 @@
     # $numbers = getValue("num", array("No Grades Entered."));
     
     #Note to self: I personally feel like an array would work better in instance (look into setting a requirement amount of inputs?)
-    $numbers[] = getValue("grade1", "0");
-    $numbers[] = getValue("grade2", "0");
-    $numbers[] = getValue("grade3", "0");
-    $numbers[] = getValue("grade4", "0");
-    $numbers[] = getValue("grade5", "0");
-    
+    $numbers = getValue("num", array(0));
     # print_r($numbers);
     
     # practicing functions in php / calling said function
@@ -39,8 +34,6 @@
         }
         
         # echo'ing out results!
-        echo "Avg: " . $total/count($ary) . "<br/>";
-        echo "Max: " . $largest . "<br/>";
-        echo "Min: " . $smallest . "<br/>";
+        echo "<p>Avg: " . $total/count($ary) . " Min: " . $smallest . " Max: " . $largest . "</p>";
     }
 ?>
