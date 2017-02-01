@@ -4,7 +4,14 @@
     
     require_once("../Utilities/functions.php");
     
-    $numbers = getValue("num", array("No Grades Entered."));
+    # $numbers = getValue("num", array("No Grades Entered."));
+    
+    #Note to self: I personally feel like an array would work better in instance (look into setting a requirement amount of inputs?)
+    $numbers[] = getValue("grade1", "0");
+    $numbers[] = getValue("grade2", "0");
+    $numbers[] = getValue("grade3", "0");
+    $numbers[] = getValue("grade4", "0");
+    $numbers[] = getValue("grade5", "0");
     
     # print_r($numbers);
     
