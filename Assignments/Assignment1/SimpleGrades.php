@@ -1,12 +1,10 @@
 <?php
-
+    
+    # By Austin Thompson
     # Test link to showcase all calculations working: https://server-side-pappyhands-1.c9users.io/Server-Side/Assignments/SimpleGrades.php?num[]=69&num[]=21&num[]=2&num[]=8
     
-    require_once("../Utilities/functions.php");
+    require_once("../../Utilities/functions.php");
     
-    # $numbers = getValue("num", array("No Grades Entered."));
-    
-    #Note to self: I personally feel like an array would work better in instance (look into setting a requirement amount of inputs?)
     $numbers = getValue("num", array(0));
     # print_r($numbers);
     
