@@ -1,7 +1,7 @@
 <?php
     
     # By Austin Thompson
-    # Test link to showcase it works: 
+    # Test links to showcase it works: 
     
     # Red Font:
     # https://server-side-pappyhands-1.c9users.io/Server-Side/Exam1/BatterEventProb.php?first=Austin&last=Thompson&bats=200&hits=78&homers=8
@@ -39,7 +39,6 @@
             return "red";
         else 
             return "black";
-        
     }
     
     # runs the all the code together and returns output
