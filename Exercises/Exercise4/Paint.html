@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <!-- Bootstrap Styles -->
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="jumbotron">
+    			<h1 class="text-center">Inputs:</h1>
+    		</div>            
+            <form method="POST" action="Paint.php?cmd=calcCost">
+    			<div class="form-group">
+    			    <label for="sqWalls">Total Area of Walls (Sq Ft):</label>
+                    <input id="sqWalls" type="number" name="sqWalls" class="form-control"/>
+                </div>
+    			<div class="form-group">
+    			    <label for="sqCan">Total Area Can can Cover (Sq Ft):</label>
+                    <input id="sqCan" type="number" name="sqCan" class="form-control"/>
+                </div>
+                <div class="form-group">
+    			    <label for="cost">Cost of Paint per Can ($):</label>
+                    <input id="cost" type="number" name="cost" class="form-control"/>
+                </div>
+                <p><input type="submit" class="btn btn-primary" value="OK"></p>
+            </form>
+        </div>
+        
+        <!-- Bootstrap JS -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>	
+        
+    </body>
+    
+</html>

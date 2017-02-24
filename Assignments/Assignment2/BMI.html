@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <!-- Bootstrap Styles -->
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="jumbotron">
+    			<h1 class="text-center">Stats!</h1>
+    		</div>            
+            <form method="POST" action="BMI.php?cmd=BMI">
+    			<div class="form-group">
+    			    <label for="height">Height (Inches):</label>
+                    <input id="height" type="text" name="H" class="form-control"/>
+                </div>
+    			<div class="form-group">
+    			    <label for="weight">Weight (Pounds):</label>
+                    <input id="weight" type="text" name="W" class="form-control"/>
+                </div>
+                <p><input type="submit" class="btn btn-primary" value="OK"></p>
+            </form>
+        </div>
+        
+        <!-- Bootstrap JS -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>	
+        
+    </body>
+    
+</html>
