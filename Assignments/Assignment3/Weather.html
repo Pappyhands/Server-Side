@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Weather Checker</title>
+
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <style>
+
+	  </style>
+
+	</head>
+	<body>
+		<!-- page content -->
+		<div class="container">
+			<h1 class="jumbotron">Wonderful Weather World!</h1>
+			<form id="zipForm">
+				<div class="form-group">
+					<label for="q">Zip Code or 'City,State'</label>
+					<input type="text" class="form-control"
+						id="q" name="q" placeholder="Enter Zip Code of 'City,State'">
+				</div>
+				<button id="btn" type="button" class="btn btn-default">Get Forecast</button>
+			</form>
+
+			<p id="response"></p>
+			
+		</div>
+
+		<!-- jquery and bootstrap -->
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<!-- custom local javascript -->
+		<script>
+		    // model
+        	var model = undefined;
+			
+			// view 
+			function updateView()
+			{
+				
+			    if (model == undefined)
+			    {
+			    }
+			    else if (model.error != null)
+			    {
+			    	 $("#response").html(
+			        	"<br/><div class='jumbotron'><h2 style='color:red'>No matching location found.</h2></div>"
+			        	);
+			    }
+				else
+				{	
+					if(model.location.country == "United States of America" || model.location.country == "USA"){
+						$("#response").html(
+			        	"<br/><div class='jumbotron'><h2>Weather for " + model.location.name + ", " + model.location.region +"</h2><p>" + model.current.condition.text + ", " + model.current.temp_f + "&deg;F</p><p><img src=" + model.current.condition.icon + " /></div>");
+					}else{
+						$("#response").html(
+			        	"<br/><div class='jumbotron'><h2>Weather for " + model.location.name + ", " + model.location.country +"</h2><p>" + model.current.condition.text + ", " + model.current.temp_f + "&deg;F</p><p><img src=" + model.current.condition.icon + " /></div>");
+					}
+					
+				}
+			}
+
+			// controller
+			$(document).ready(function ()
+			{
+			    updateView();
+			});
+
+			$("#btn").click(function ()
+			{
+		    	var z = $("#q").val();
+				var url = "https://api.apixu.com/v1/current.json?key=f159b8380cac43d2b1c191629172903&q="+z;
+				console.log(url);
+				var request = $.getJSON(url);
+	
+				request.done(function(json)
+				{
+				  console.log(json);
+				  if (json.error === undefined)
+				  {
+				  	  model = json;
+				  }
+				  else
+				  {
+					  model.error = json.error.message;
+				  }
+	
+				  updateView();
+				});
+	
+			  	request.fail(function()
+				{
+					model.error = "Error contacting server!";
+					updateView();
+			  	});
+            });
+
+		</script>
+	</body>
+</html>

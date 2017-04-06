@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Class Lookup</title>
+
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <style>
+
+	  </style>
+
+	</head>
+	<body>
+		<!-- page content -->
+		<div class="container">
+			<h1 class="jumbotron">Enter a Teacher</h1>
+			<form id="classForm">
+				<div class="form-group">
+					<label for="name">Teacher Name</label>
+					<input type="text" class="form-control"
+						id="name" name="name" placeholder="Enter a Teacher Name">
+				</div>
+				<button id="btn" type="button" class="btn btn-default">Get Classes</button>
+			</form>
+
+			<p id="response"></p>
+			
+		</div>
+
+		<!-- jquery and bootstrap -->
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<!-- custom local javascript -->
+		<script>
+		    // model
+        	var model = undefined;
+			
+			// view 
+			function updateView()
+			{
+			    if (model == undefined)
+			    {
+			        $("#response").text("Enter a Teacher Name.");
+			    }
+				else
+				{
+					var classes = "<ul>";
+					for (var i in model){
+						classes += "<li> Class: " + model[i].Class + " ------ ID: " + model[i].ID + "</i>";
+					}
+					classes += "</u>";
+					$("#response").html(classes);
+				}
+			}
+
+			// controller
+			$(document).ready(function ()
+			{
+			    updateView();
+			});
+
+			$("#btn").click(function ()
+			{
+				var z = $("#name").val();
+		    	var url = "getClasses.php?cmd=getClasses&name="+z;
+                var request = $.post(url, "");
+                request.done(function(json)
+                {
+                	console.log(json);
+                    model = json;
+                    updateView();
+                });
+                request.fail(function(jqXHR, textStatus, errorThrown)
+                {
+                    $("#response").text(textStatus);
+                    console.log("fail object ", jqXHR);
+                    console.log("error thrown ", errorThrown);
+                    updateView();
+                });
+            });
+
+		</script>
+	</body>
+</html>

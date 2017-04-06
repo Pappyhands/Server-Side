@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Number Guess</title>
+
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <style>
+
+	  </style>
+
+	</head>
+	<body>
+		<!-- page content -->
+		<div class="container">
+			<h2>Add to List:</h2>
+			<form id="addForm">
+				<div class="form-group">
+					<label for="num">Add a number</label>
+					<input type="text" class="form-control"
+						id="num" name="num" placeholder="Enter a number.">
+				</div>
+				<button id="btn" type="button" class="btn btn-default">Add</button>
+			</form>
+
+			<p id="response"></p>
+			
+		</div>
+
+		<!-- jquery and bootstrap -->
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<!-- custom local javascript -->
+		<script>
+		    // model
+        	var model = undefined;
+			
+			// view 
+			function updateView()
+			{
+				
+			    if (model == undefined)
+			    {
+			        $("#response").text("Add numbers to the list.");
+			        
+			    }
+				else if (model.largest != 0)
+				{
+					$("#response").text("YES!");
+				}
+			    else
+			    {
+			        $("#response").text("Unknown response from server");
+			    }
+			}
+
+			// controller
+			$(document).ready(function ()
+			{
+			    updateView();
+			});
+
+			$("#btn").click(function ()
+			{
+		    	var url = "NumberGuess.php?cmd=add";
+	            var data = $("#addForm" ).serialize();
+	            
+                var request = $.post(url, data);
+                request.done(function(json)
+                {
+                    model = json;
+                    updateView();
+                });
+                request.fail(function(jqXHR, textStatus, errorThrown)
+                {
+                    $("#response").text(textStatus);
+                    console.log("fail object ", jqXHR);
+                    console.log("error thrown ", errorThrown);
+                    updateView();
+                });
+            });
+
+		</script>
+	</body>
+</html>
