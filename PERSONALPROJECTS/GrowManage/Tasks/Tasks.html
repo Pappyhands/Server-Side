@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta http-equiv="refresh" content="15">-->
+
+    <title>Task Viewer - GrowManage&trade;</title>
+
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <style>
+		.msgBox 
+		{
+			font-weight: bold;		
+		}
+		th
+		{
+			text-align: center;
+		}
+		.centerTxt
+		{
+			text-align: center;
+		}
+		form
+		{
+			padding: 5px;
+			border: 1px solid black;
+			box-shadow: 10px 10px 5px #888888;
+		}
+	</style>
+
+	</head>
+	<body>
+		<!-- page content -->
+		<div class="container">
+			<h2>Current Tasks:</h2>
+			
+			<table id="taskTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID:</th>
+						
+						<th>Task:</th>
+						<th>Worker:</th>
+						
+						<th>Assigned:</th>
+						
+						<th>Finished?:</th>
+						<th class="col-md-5">Notes:</th>
+						
+						<th class="col-md-0">Edit</th>
+						<th class="col-md-0">Delete</th>
+					</tr>
+				</thead>
+				<tbody id="taskTableBody">
+				</tbody>
+			</table>
+			
+			<p id="message" class="msgBox"></p>
+			
+			<button id="popup" type="button" class="btn btn-default">Add Tasks</button>
+			
+			<div id="popupMenuAdd" class="popup">
+				<form id="taskForm">
+					<div class="form-group">
+						<label for="taskName">Task Name</label>
+						<input type="text" class="form-control"
+							id="taskName" name="taskName" placeholder="task name">
+					</div>
+					<div class="form-group">
+						<label for="personAssigned">Person Assigned</label>
+						<input type="text" class="form-control"
+							id="personAssigned" name="personAssigned" placeholder="person assigned">
+					</div>
+					
+					
+					<button id="addBtn" type="button" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+			
+			<!--||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+			
+			
+			<!--[{  "TaskName":"get interviewed",
+					"PersonAssigned":"Mike",
+					"TaskStatus":"N",
+					"Notes":""}]-->
+			
+			<div id="popupMenuEdit" class="popup">
+				<form id="taskForm">
+					
+					<div class="form-group">
+						<label for="taskName">Task Name</label>
+						<input type="text" class="form-control"
+							id="taskName" name="taskName" placeholder="task name">
+					</div>
+					
+					<div class="form-group">
+						<label for="personAssigned">Person Assigned</label>
+						<input type="text" class="form-control"
+							id="personAssigned" name="personAssigned" placeholder="person assigned">
+					</div>
+					
+					<div class="form-group">
+						<label for="taskStatus">Task Status</label>
+						<input type="text" class="form-control"
+							id="taskStatus" name="taskStatus" placeholder="task status">
+					</div>
+					
+					<div class="form-group">
+						<label for="notes">Notes</label>
+						<input type="text" class="form-control"
+							id="notes" name="notes" placeholder="notes">
+					</div>
+					
+					
+					<button id="editBtn" type="button" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+			
+			<!--||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+			
+		</div>
+
+		<!-- jquery and bootstrap -->
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<!-- custom local javascript -->
+		<script>
+		    // model
+        	var model = [];
+			
+			// view 
+			function updateView()
+			{
+				if (model.error != undefined)
+				{
+					$("#message").html(
+			        	"<p style='color:red'>" + model.error + "</p>"
+			        	);
+				}
+				else
+				{
+					$("#taskTableBody").empty();
+					for (var i in model)
+					{
+						var row = model[i];
+						$("#taskTableBody").append("<tr>"+
+							"<td class=\"col-md-0\">"+row.TaskID+"</td>"+
+							"<td>"+row.TaskName+"</td>"+
+							"<td>"+row.PersonAssigned+"</td>"+
+							"<td class=\"col-md-1\">"+row.AssignedAt+"</td>"+
+							"<td class=\"centerTxt col-md-1\">"+row.TaskStatus+"</td>"+
+							"<td class=\"col-md-5\">"+row.Notes+"</td>"+
+							"<td class=\"centerTxt col-md-0\"><a taskID='"+row.TaskID +"' href='#' class='editBtn glyphicon glyphicon-pencil'></a></td>"+
+							"<td class=\"centerTxt col-md-0\"><a taskID='"+row.TaskID +"' href='#' class='delBtn glyphicon glyphicon-remove'></a></td>"+
+							"</tr>");
+					}
+					$("#message").text("You have "+model.length+" task(s) entered.");
+				}
+			}
+
+			// controller
+			
+			setInterval(refresh_tasks, 5000);
+
+			function refresh_tasks() {
+			  sendCommand("getTasks");
+			}
+			
+			$(document).ready(function ()
+			{
+				$(".popup").hide();
+				sendCommand("getTasks");
+			});
+			
+			$("#popup").click(function ()
+			{
+				$("#popupMenuAdd").toggle( "slow", function() {
+    				// Animation complete.
+				});
+            });
+
+			$("#addBtn").click(function ()
+			{
+				sendCommand("addTask");
+				$("#popupMenuAdd").toggle( "slow", function() {
+    				// Animation complete.
+				});
+            });
+            
+			$(document).on("click", ".delBtn", function()
+			{
+				var id = $(this).attr("taskID");
+
+		    	var url = "Tasks.php?cmd=deleteTask&taskID="+id;
+	            var data = $("#taskForm" ).serialize();
+                var request = $.post(url, data);
+                request.done(function(json)
+                {
+                	console.log(json);
+                    model = json;
+                    updateView();
+                });
+                request.fail(function(jqXHR, textStatus, errorThrown)
+                {
+                    $("#message").text(textStatus);
+                    console.log("fail object ", jqXHR);
+                    console.log("error thrown ", errorThrown);
+                    updateView();
+                });
+            });            
+            
+            
+            
+            $(document).on("click", ".editBtn", function()
+			{
+				$("#popupMenuEdit").toggle( "slow", function() {
+    				// Animation complete.
+				})
+				
+				var id = $(this).attr("taskID");
+				var url = "Tasks.php?cmd=grabTask&taskID="+id;
+				
+				// alert(url);
+				
+				//var id = $(this).attr("taskID");
+
+		  //  	var url = "Tasks.php?cmd=deleteTask&taskID="+id;
+	   //         var data = $("#taskForm" ).serialize();
+    //             var request = $.post(url, data);
+    //             request.done(function(json)
+    //             {
+    //             	console.log(json);
+    //                 model = json;
+    //                 updateView();
+    //             });
+    //             request.fail(function(jqXHR, textStatus, errorThrown)
+    //             {
+    //                 $("#message").text(textStatus);
+    //                 console.log("fail object ", jqXHR);
+    //                 console.log("error thrown ", errorThrown);
+    //                 updateView();
+    //             });
+            });           
+            
+            
+            
+            function sendCommand(cmd)
+            {
+		    	var url = "Tasks.php?cmd="+cmd;
+	            var data = $("#taskForm" ).serialize();
+                var request = $.post(url, data);
+                request.done(function(json)
+                {
+                	console.log(json);
+                    model = json;
+                    updateView();
+                });
+                request.fail(function(jqXHR, textStatus, errorThrown)
+                {
+                    $("#message").text(textStatus);
+                    console.log("fail object ", jqXHR);
+                    console.log("error thrown ", errorThrown);
+                    updateView();
+                });
+            }
+            
+
+		</script>
+	</body>
+</html>

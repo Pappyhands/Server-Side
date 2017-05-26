@@ -30,23 +30,32 @@ else // list all supported commands
     <pre>
         Command: add
       
-            Description: adds a number to a list
+            Description: adds a flavor to a list
             
             Parameters: num
 
             Example:
-                Query string: ?cmd=add&num=5 
-                Returns: {'largest': 7, 'numbers': [1, 7, 3, 6, 5] }
+                Query string: ?cmd=add&num=Vanilla 
+                Returns: {'last': 'Vanilla', 'numbers': ['Vanilla','Chocolate'] }
                 
         Command: fetch
       
-            Description: returns the list of numbers
+            Description: displays a flavor to a list
             
-            Parameters: none
 
             Example:
                 Query string: ?cmd=fetch
-                Returns: {'largest': 7, 'numbers': [1, 7, 3, 6, 5] }                
+                Returns: {'last': 'Vanilla', 'numbers': ['Vanilla','Chocolate'] }
+                
+        Command: sub
+      
+            Description: subtract a flavor to a list
+            
+            Parameters: num
+
+            Example:
+                Query string: ?cmd=sub&num=Vanilla 
+                Returns: {'last': 'Vanilla', 'numbers': ['Chocolate'] }                
     </pre>            
   ";
 }
@@ -86,6 +95,6 @@ function fetch()
 {
 	$numbers = getSessionValue("numbers", []);
 	$max = max($numbers);
-    return array("largest"=>$max, "numbers"=>$numbers);
+    return array("last"=>$max, "numbers"=>$numbers);
 }
 ?>
